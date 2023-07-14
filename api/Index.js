@@ -3,6 +3,8 @@ const cors = require("cors");
 const { mongoose } = require("mongoose");
 const User = require("./models/User");
 const bcrypt = require("bcryptjs");
+const dotenv = require('dotenv');
+dotenv.config();
 
 const app = express();
 
@@ -11,9 +13,13 @@ const salt = bcrypt.genSaltSync(10);
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(
-  "mongodb+srv://Sneha:Sneha19@cluster0.ldzutr9.mongodb.net/?retryWrites=true&w=majority"
-);
+const mongoDBURI = process.env.MONGODB_URI;
+
+mongoose.connect(mongoDBURI).then(()=>{
+  console.log("connection done")
+}).catch((e)=>{
+  console.log(e)
+});
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
@@ -35,5 +41,5 @@ app.post('/login', async (req,res) => {
     res.json(userDoc);
 });
 
-app.listen(4000);
+app.listen(3000,()=> console.log('server listening'));
 //
